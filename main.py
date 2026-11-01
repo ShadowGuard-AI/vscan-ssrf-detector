@@ -57,11 +57,21 @@ def test_ssrf(url, params, payload, timeout, user_agent, method='GET'):
     if not params:
         logging.info("SSRF test not performed: no parameters to inject into.")
         return "not_performed"
+    # The payload page is fetched again inside every single test, so
+    # a long scan hammers the operator's own callback, and if that
+    # page changes mid scan the evidence standard changes with it.
+    # Its whole stripped text is the marker: a short or common body
+    # such as a single word can appear in a target page by chance.
     payload_content = _payload_content(payload, timeout, user_agent)
     try:
         if method == 'GET':
             parsed = urllib.parse.urlparse(url)
             existing = dict(urllib.parse.parse_qsl(parsed.query, keep_blank_values=True))
+            # Every parameter is replaced in the same one request, and
+            # the form path below does the same with every field. A hit
+            # tells me the target fetched the payload, never which
+            # parameter made it fetch, so a report cannot name the
+            # vulnerable field.
             merged = dict(existing)
             for key in params:
                 merged[key] = payload
