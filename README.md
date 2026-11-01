@@ -10,9 +10,10 @@ Detects potential Server-Side Request Forgery (SSRF) vulnerabilities by analyzin
 ## Parameters
 - `-h`: Show help message and exit
 - `--timeout`: Timeout for requests in seconds. Default is 5.
-- `--payload`: The payload to inject. Default is http://example.com.
+- `--payload`: The payload URL to inject, named by the operator. There is no default payload.
+- `--callback-url`: Operator controlled callback URL to use as the payload. A finding requires evidence the target fetched this URL; payload text reflected in a response is reported as reflection only.
 - `--user-agent`: Custom User-Agent header.
-- `--method`: HTTP method to use. Default is GET.
+- `--method`: HTTP method to use for URL parameter tests. Default is GET.
 
 ## License
 Copyright (c) ShadowStrikeHQ
